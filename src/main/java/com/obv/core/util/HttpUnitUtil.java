@@ -28,6 +28,7 @@ public class HttpUnitUtil {
         ArrayList<String> priceVolumeResults = new ArrayList<String>();
         HttpUnitOptions.setScriptingEnabled(false);
         WebConversation wc = new WebConversation();
+//        wc.setHeaderField(fieldName, fieldValue);
         WebResponse response;
         if(_stockID.matches("^00") || _stockID.matches("^30")) {
             response = wc.getResponse("http://finance.yahoo.com/q/hp?s=" + _stockID + ".SZ&a=" + monthOfYahoo + "&b="

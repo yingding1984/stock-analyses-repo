@@ -68,13 +68,13 @@ public class MySQLUtil {
             stockID = matcher.group();
             System.out.println("storing " + stockID);
             restoreStockDataToDB(stockID, year, month, date);
-            Thread.sleep(5000);
+//            Thread.sleep(5000);
         }
         // TO-DO get stock id list and execute storage
     }
 
     public static void main(String[] args) throws Exception {
-//        cleanDB();
+        // cleanDB();
          restoreStockDataToDB("600318", "2013", "07", "29");
 //        restoreAllStockDataToDB("2013", "08", "01");
     }
