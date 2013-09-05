@@ -17,7 +17,7 @@ import com.meterware.httpunit.WebTable;
  * @author yingdin
  * 
  */
-public class HttpUnitRoom {
+public class HttpUnitUtil {
 	// structure of priceVolumeResults-- 1 Date 2 Open Price 5 Close Price 6
 	// Volumn of day
 

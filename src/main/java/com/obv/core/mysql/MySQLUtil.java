@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.xml.sax.SAXException;
 
-import com.obv.core.httpunit.test.HttpUnitRoom;
+import com.obv.core.httpunit.test.HttpUnitUtil;
 
 public class MySQLUtil {
 
@@ -37,7 +37,7 @@ public class MySQLUtil {
 			String month, String date) throws IOException, SAXException {
 		String tradeDate, openPrice, closePrice, volumn;
 		String restoreQuery;
-		ArrayList<String> priceVolumeResults = HttpUnitRoom
+		ArrayList<String> priceVolumeResults = HttpUnitUtil
 				.getStockTradeDetailFromDate(stockID, year, month, date);
 		for (int i = 0; i < priceVolumeResults.size(); i++) {
 			String recordLine = priceVolumeResults.get(i);
@@ -66,6 +66,6 @@ public class MySQLUtil {
 	}
 
 	public static void main(String[] args) throws IOException, SAXException {
-		restoreStockDataToDB("002300","2013","08","29");
+		restoreStockDataToDB("002300","2013","07","29");
 	}
 }
