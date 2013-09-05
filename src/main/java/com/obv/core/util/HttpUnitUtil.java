@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.obv.core.httpunit.test;
+package com.obv.core.util;
 
 import java.io.IOException;
 import java.util.ArrayList;

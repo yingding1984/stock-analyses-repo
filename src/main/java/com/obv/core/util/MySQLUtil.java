@@ -1,4 +1,4 @@
-package com.obv.core.mysql;
+package com.obv.core.util;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import org.xml.sax.SAXException;
 
-import com.obv.core.httpunit.test.HttpUnitUtil;
+import com.obv.core.mysql.MySQLConnector;
 
 public class MySQLUtil {
 
