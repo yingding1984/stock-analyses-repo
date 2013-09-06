@@ -36,11 +36,11 @@ public class MySQLUtil {
         return records;
     }
 
-    public static void restoreStockDataToDB(String stockID, String year, String month, String date) throws IOException,
+    public static void collectStockDataToDB(String stockID, String from_year, String from_month, String from_date, String to_year, String to_month, String to_date) throws IOException,
             SAXException, SQLException {
         String tradeDate, openPrice, closePrice, volumn;
         String restoreQuery;
-        ArrayList<String> priceVolumeResults = HttpUnitUtil.getStockTradeDetailFromDate(stockID, year, month, date);
+        ArrayList<String> priceVolumeResults = HttpUnitUtil.getStockTradeDetailFromDate(stockID, from_year, from_month, from_date,to_year,to_month,to_date);
         for(int i = 0; i < priceVolumeResults.size(); i++) {
             String recordLine = priceVolumeResults.get(i);
             String[] recordColumns = recordLine.split("\\|");
@@ -60,7 +60,7 @@ public class MySQLUtil {
 
     }
 
-    public static void restoreAllStockDataToDB(String year, String month, String date) throws Exception {
+    public static void collectAllStockDataToDB(String from_year, String from_month, String from_date, String to_year, String to_month, String to_date) throws Exception {
         String stockID;
         String stockList = FileLoader.loadFile(STOCK_LIST_FILE_PATH);
         Pattern pattern = Pattern.compile("\\d{6}");
@@ -68,15 +68,8 @@ public class MySQLUtil {
         while(matcher.find()) {
             stockID = matcher.group();
             System.out.println("storing " + stockID);
-            restoreStockDataToDB(stockID, year, month, date);
-//            Thread.sleep(5000);
+            collectStockDataToDB(stockID, from_year, from_month, from_date,to_year,to_month,to_date);
         }
-        // TO-DO get stock id list and execute storage
     }
 
-    public static void main(String[] args) throws Exception {
-        // cleanDB();
-         restoreStockDataToDB("600319", "2013", "07", "29");
-//        restoreAllStockDataToDB("2013", "08", "01");
-    }
 }
