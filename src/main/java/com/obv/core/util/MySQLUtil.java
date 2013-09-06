@@ -20,16 +20,16 @@ public class MySQLUtil {
     private final static String CREATE_TABLE = "create  table  records(id  varchar(20),Date  varchar(20),open float,close float,volumn int,primary  key(id,Date))";
 
     public static void cleanDB() {
-        MySQLConnector.execute(CLEAN_DB);
+        MySQLConnector.DEFAULT_CONN.execute(CLEAN_DB);
     }
 
     public static void initialDB() {
-        MySQLConnector.execute(CREATE_TABLE);
+        MySQLConnector.DEFAULT_CONN.execute(CREATE_TABLE);
     }
 
     public static ArrayList<String> getAllRecords() throws SQLException {
         ArrayList<String> records = new ArrayList<String>();
-        rs = MySQLConnector.getResults(GET_ALL_RECORDS);
+        rs = MySQLConnector.DEFAULT_CONN.getResults(GET_ALL_RECORDS);
         while(rs.next()) {
             records.add(rs.toString());
         }
@@ -37,7 +37,7 @@ public class MySQLUtil {
     }
 
     public static void restoreStockDataToDB(String stockID, String year, String month, String date) throws IOException,
-            SAXException {
+            SAXException, SQLException {
         String tradeDate, openPrice, closePrice, volumn;
         String restoreQuery;
         ArrayList<String> priceVolumeResults = HttpUnitUtil.getStockTradeDetailFromDate(stockID, year, month, date);
@@ -53,9 +53,10 @@ public class MySQLUtil {
                         + closePrice + " " + volumn);
                 restoreQuery = "insert into records(id,Date,open,close,volumn) values ('" + stockID + "','" + tradeDate
                         + "'," + openPrice + "," + closePrice + "," + volumn + ")";
-                MySQLConnector.execute(restoreQuery);
+                MySQLConnector.DEFAULT_CONN.execute(restoreQuery);
             }
         }
+        MySQLConnector.DEFAULT_CONN.closeConn();
 
     }
 
@@ -75,7 +76,7 @@ public class MySQLUtil {
 
     public static void main(String[] args) throws Exception {
         // cleanDB();
-//         restoreStockDataToDB("600319", "2013", "07", "29");
-        restoreAllStockDataToDB("2013", "08", "01");
+         restoreStockDataToDB("600319", "2013", "07", "29");
+//        restoreAllStockDataToDB("2013", "08", "01");
     }
 }
