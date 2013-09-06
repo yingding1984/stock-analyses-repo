@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.obv.core.util;
+package com.obv.core.http.util;
 
 import java.io.IOException;
 import java.util.ArrayList;

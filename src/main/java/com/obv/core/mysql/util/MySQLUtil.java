@@ -1,4 +1,4 @@
-package com.obv.core.util;
+package com.obv.core.mysql.util;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -9,7 +9,9 @@ import java.util.regex.Pattern;
 
 import org.xml.sax.SAXException;
 
-import com.obv.core.mysql.MySQLConnector;
+import com.obv.core.http.util.HttpUnitUtil;
+import com.obv.core.mysql.entity.MySQLConnector;
+import com.obv.core.util.FileLoader;
 
 public class MySQLUtil {
 

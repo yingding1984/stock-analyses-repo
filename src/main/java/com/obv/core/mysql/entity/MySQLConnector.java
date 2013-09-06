@@ -1,4 +1,4 @@
-package com.obv.core.mysql;
+package com.obv.core.mysql.entity;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,11 +1,11 @@
-package com.obv.core.tools;
+package com.obv.core.operation;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 import org.xml.sax.SAXException;
 
-import com.obv.core.util.MySQLUtil;
+import com.obv.core.mysql.util.MySQLUtil;
 
 public class DataCollector {
 	public static void main(String[] args) throws IOException, SAXException, SQLException {
