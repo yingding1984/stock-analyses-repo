@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
+/**
+ * @author yingdin
+ * 
+ */
 public class MySQLConnector {
 
 	static Connection con = null;
@@ -29,19 +33,15 @@ public class MySQLConnector {
 
 			Statement st = con.createStatement();
 			st.execute(_sqlStmt);
-			// ResultSet rs = st.executeQuery(_sqlStmt);
-			/*
-			 * while (rs.next()) { System.out.println(rs.getString("id")); }
-			 */
 
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
 	}
-	
-	public void closeConn() throws SQLException{
+
+	public void closeConn() throws SQLException {
 		con.close();
-		
+
 	}
 
 	public ResultSet getResults(String _sqlStmt) {

@@ -13,6 +13,10 @@ import com.obv.core.http.util.HttpUnitUtil;
 import com.obv.core.mysql.entity.MySQLConnector;
 import com.obv.core.util.FileLoader;
 
+/**
+ * @author yingdin
+ * 
+ */
 public class MySQLUtil {
 
     static ResultSet rs;
