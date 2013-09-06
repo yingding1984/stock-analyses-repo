@@ -12,13 +12,13 @@ import java.sql.ResultSet;
  */
 public class MySQLConnector {
 
-	static Connection con = null;
+	Connection con;
 
-	private MySQLConnector(String rootPasswd) {
+	public MySQLConnector(String passwd) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/stock",
-					"root", rootPasswd);
+					"root", passwd);
 
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());

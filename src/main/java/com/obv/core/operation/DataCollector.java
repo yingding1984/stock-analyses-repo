@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import org.xml.sax.SAXException;
 
+import com.obv.core.mysql.entity.MySQLConnector;
 import com.obv.core.mysql.util.MySQLUtil;
 
 /**
@@ -13,9 +14,9 @@ import com.obv.core.mysql.util.MySQLUtil;
  */
 public class DataCollector {
 	public static void main(String[] args) throws Exception {
-		MySQLUtil.collectStockDataToDB("600319", "2013", "07", "29", "2013",
-				"09", "05");
-//		MySQLUtil.collectAllStockDataToDB("2013", "08", "01", "2013", "09",
-//				"05");
+		MySQLUtil.collectStockData("600319", "2013", "07", "01", "2013", "09",
+				"05", MySQLConnector.DEFAULT_CONN);
+		// MySQLUtil.collectAllStockDataToDB("2013", "08", "01", "2013", "09",
+		// "05");
 	}
 }
