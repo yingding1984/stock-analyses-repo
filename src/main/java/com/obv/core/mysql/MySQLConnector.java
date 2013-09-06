@@ -16,9 +16,6 @@ public class MySQLConnector {
 			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1/stock",
 					"root", rootPasswd);
 
-			if (!con.isClosed())
-				System.out.println("Successfully connected to MySQL server...");
-
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
