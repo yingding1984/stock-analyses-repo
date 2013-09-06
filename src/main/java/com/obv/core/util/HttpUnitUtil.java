@@ -30,7 +30,7 @@ public class HttpUnitUtil {
         WebConversation wc = new WebConversation();
 //        wc.setHeaderField(fieldName, fieldValue);
         WebResponse response;
-        if(_stockID.matches("^00") || _stockID.matches("^30")) {
+        if(_stockID.matches("00\\d{4}") || _stockID.matches("30\\d{4}")) {
             response = wc.getResponse("http://finance.yahoo.com/q/hp?s=" + _stockID + ".SZ&a=" + monthOfYahoo + "&b="
                     + _date + "&c=" + _year + "&d=08&e=4&f=" + _year + "&g=d");
         } else {

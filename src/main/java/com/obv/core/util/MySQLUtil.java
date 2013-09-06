@@ -75,7 +75,7 @@ public class MySQLUtil {
 
     public static void main(String[] args) throws Exception {
         // cleanDB();
-         restoreStockDataToDB("600318", "2013", "07", "29");
-//        restoreAllStockDataToDB("2013", "08", "01");
+//         restoreStockDataToDB("600319", "2013", "07", "29");
+        restoreAllStockDataToDB("2013", "08", "01");
     }
 }
