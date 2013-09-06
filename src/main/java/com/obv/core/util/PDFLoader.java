@@ -21,10 +21,10 @@ public class PDFLoader {
 			String content = new String();
 			for (int i = 1; i < n; i++) {
 				System.out
-						.println("***************************************************************************************");
+						.println("\n\n\n***************************************************************************************");
 				System.out.println("PAGE " + i);
 				System.out
-						.println("***************************************************************************************");
+						.println("***************************************************************************************\n\n\n");
 				String contentLine = PdfTextExtractor
 						.getTextFromPage(reader, i);
 				System.out.println(contentLine);
