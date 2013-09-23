@@ -75,9 +75,9 @@ public class HttpUnitUtil {
 			System.out.println("this is the number "+i+" table content: ");
 			WebTable t = table[i];
 //			System.out.println(t.getText());
-			String jingzichan  =  t.getTableCell(3, 1).getText();
+			String jingzichan  =  t.getTableCell(4, 1).getText();
 			double count = Double.parseDouble(jingzichan.substring(0, jingzichan.length()-1));
-			System.out.println(count*2);
+			System.out.println(count);
 		}
 		/*if (table.length >= 0) {
 			String infoTable = table[4].getTableCell(1, 0).getText()
