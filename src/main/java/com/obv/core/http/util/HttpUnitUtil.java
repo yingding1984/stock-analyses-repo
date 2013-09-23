@@ -60,6 +60,41 @@ public class HttpUnitUtil {
 		return priceVolumeResults;
 	}
 
+	public  static void getStockFinanceSummary(String _stockID)
+			throws IOException, SAXException {
+
+		HttpUnitOptions.setScriptingEnabled(false);
+		WebConversation wc = new WebConversation();
+		WebResponse response;
+
+		response = wc
+				.getResponse("http://vip.stock.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/002528/displaytype/4.phtml");
+
+		WebTable[] table = response.getTables();
+		for(int i=19;i<table.length-1;i++){
+			System.out.println("this is the number "+i+" table content: ");
+			WebTable t = table[i];
+//			System.out.println(t.getText());
+			String jingzichan  =  t.getTableCell(3, 1).getText();
+			double count = Double.parseDouble(jingzichan.substring(0, jingzichan.length()-1));
+			System.out.println(count*2);
+		}
+		/*if (table.length >= 0) {
+			String infoTable = table[4].getTableCell(1, 0).getText()
+					.replaceAll(",", "");
+			String[] strlines = infoTable.split("\n");
+			for (int i = 0; i < strlines.length; i++) {
+
+				priceVolumeResults.add(strlines[i]);
+
+			}*/
+
+		}
+
+	public static void main(String[] args) throws IOException, SAXException {
+		getStockFinanceSummary("11");
+	}
+
 	private static String getRealMonth(String _month) {
 		String monthOfYahooStr = null;
 		Integer monthOfYahoo = Integer.parseInt(_month);

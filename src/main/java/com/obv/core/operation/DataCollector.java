@@ -14,8 +14,8 @@ import com.obv.core.mysql.util.MySQLUtil;
  */
 public class DataCollector {
 	public static void main(String[] args) throws Exception {
-		MySQLUtil.collectStockData("600319", "2013", "07", "01", "2013", "09",
-				"05", MySQLConnector.DEFAULT_CONN);
+		MySQLUtil.collectStockData("002300", "2013", "01", "01", "2013", "09",
+				"06", MySQLConnector.DEFAULT_CONN);
 		// MySQLUtil.collectAllStockDataToDB("2013", "08", "01", "2013", "09",
 		// "05");
 	}
