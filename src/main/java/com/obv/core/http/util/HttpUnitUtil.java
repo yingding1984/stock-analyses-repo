@@ -68,15 +68,26 @@ public class HttpUnitUtil {
 		WebResponse response;
 
 		response = wc
-				.getResponse("http://vip.stock.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/002528/displaytype/4.phtml");
+				.getResponse("http://vip.stock.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/002528.phtml");
 
 		WebTable[] table = response.getTables();
 		for(int i=19;i<table.length-1;i++){
 			System.out.println("this is the number "+i+" table content: ");
 			WebTable t = table[i];
-//			System.out.println(t.getText());
-			String jingzichan  =  t.getTableCell(4, 1).getText();
-			double count = Double.parseDouble(jingzichan.substring(0, jingzichan.length()-1));
+			System.out.println(t.getText());
+			String meigujingzichan  =  t.getTableCell(4, 1).getText();
+			String meigushouyi  =  t.getTableCell(4, 1).getText();
+			String meiguxianjinhanliang  =  t.getTableCell(4, 1).getText();
+			String meiguzibengongjijin  =  t.getTableCell(4, 1).getText();
+			String gudingzichanheji  =  t.getTableCell(4, 1).getText();
+			String liudongzichanheji  =  t.getTableCell(4, 1).getText();
+			String zichanzongji  =  t.getTableCell(4, 1).getText();
+			String changqifuchaiheji  =  t.getTableCell(4, 1).getText();
+			
+			String _zhuyingyewushouru  =  t.getTableCell(4, 1).getText();
+			String _caiwufeiyong  =  t.getTableCell(4, 1).getText();
+			String _jinlirun  =  t.getTableCell(4, 1).getText();
+			double count = Double.parseDouble(meigujingzichan.substring(0, meigujingzichan.length()-1));
 			System.out.println(count);
 		}
 		/*if (table.length >= 0) {
