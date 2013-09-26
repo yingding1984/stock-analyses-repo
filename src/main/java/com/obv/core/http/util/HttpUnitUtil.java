@@ -13,6 +13,8 @@ import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.httpunit.WebTable;
+import com.obv.core.mysql.entity.Quarter;
+import com.obv.core.mysql.entity.QuarterBaseLineCount;
 
 /**
  * @author yingdin
@@ -21,6 +23,8 @@ import com.meterware.httpunit.WebTable;
 public class HttpUnitUtil {
 	// structure of priceVolumeResults-- 1 Date 2 Open Price 5 Close Price 6
 	// Volumn of day
+
+	private final static int BASE_INCREASEMENT = 14;
 
 	public static ArrayList<String> getStockTradeDetailFromDate(
 			String _stockID, String _from_year, String _from_month,
@@ -61,9 +65,9 @@ public class HttpUnitUtil {
 		return priceVolumeResults;
 	}
 
-	public static ArrayList<Double> getCaiWuZhaiYao(String _stockID)
-			throws IOException, SAXException {
-
+	public static ArrayList<Double> getCaiWuZhaiYao(String _stockID,
+			Quarter q, boolean isFirstQ) throws IOException, SAXException {
+		int plusCount = QuarterBaseLineCount.qHash.get(q);
 		ArrayList<Double> caiWuZhaiYao_Data = new ArrayList<Double>();
 		HttpUnitOptions.setScriptingEnabled(false);
 		WebConversation wc = new WebConversation();
@@ -78,15 +82,24 @@ public class HttpUnitUtil {
 		WebTable[] table = response.getTables();
 		WebTable t = table[19];
 		// System.out.println(t.getText());
-		String meigujingzichan = t.getTableCell(3, 1).getText();
-		String meigushouyi = t.getTableCell(4, 1).getText();
-		String meiguxianjinhanliang = t.getTableCell(5, 1).getText();
-		String meiguzibengongjijin = t.getTableCell(6, 1).getText();
-		String liudongzichanheji = t.getTableCell(8, 1).getText();
-		String zichanzongji = t.getTableCell(9, 1).getText();
-		String changqifuzhaiheji = t.getTableCell(10, 1).getText();
+		String meigujingzichan = t.getTableCell(
+				3 + plusCount * BASE_INCREASEMENT, 1).getText();
+		String meigushouyi = t.getTableCell(4 + plusCount * BASE_INCREASEMENT,
+				1).getText();
+		String meiguxianjinhanliang = t.getTableCell(
+				5 + plusCount * BASE_INCREASEMENT, 1).getText();
+		String meiguzibengongjijin = t.getTableCell(
+				6 + plusCount * BASE_INCREASEMENT, 1).getText();
+		String liudongzichanheji = t.getTableCell(
+				8 + plusCount * BASE_INCREASEMENT, 1).getText();
+		String zichanzongji = t.getTableCell(9 + plusCount * BASE_INCREASEMENT,
+				1).getText();
+		String changqifuzhaiheji = t.getTableCell(
+				10 + plusCount * BASE_INCREASEMENT, 1).getText();
 
 		double meigujingzichan_d = 0, meigushouyi_d = 0, meiguxianjinhanliang_d = 0, meiguzibengongjijin_d = 0, liudongzichanheji_d = 0, zichanzongji_d = 0, changqifuzhaiheji_d = 0;
+
+		double zhuyingyewushouru_d = 0, caiwufeiyong_d = 0, jinlirun_d = 0;
 
 		if (meigujingzichan != null && meigujingzichan.length() > 0)
 			meigujingzichan_d = Double.parseDouble(meigujingzichan.substring(0,
@@ -116,51 +129,81 @@ public class HttpUnitUtil {
 			changqifuzhaiheji_d = Double.parseDouble(changqifuzhaiheji
 					.substring(0, changqifuzhaiheji.length() - 2));
 
-		String zhuyingyewushouru_current = t.getTableCell(11, 1).getText();
-		String caiwufeiyong_current = t.getTableCell(12, 1).getText();
-		String jinlirun_current = t.getTableCell(13, 1).getText();
+		if (isFirstQ) {
+			String zhuyingyewushouru = t.getTableCell(
+					11 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String caiwufeiyong = t.getTableCell(
+					12 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String jinlirun = t.getTableCell(
+					13 + plusCount * BASE_INCREASEMENT, 1).getText();
 
-		String zhuyingyewushouru_last = t.getTableCell(25, 1).getText();
-		String caiwufeiyong_last = t.getTableCell(26, 1).getText();
-		String jinlirun_last = t.getTableCell(27, 1).getText();
+			if (zhuyingyewushouru != null && zhuyingyewushouru.length() > 0)
+				zhuyingyewushouru_d = Double.parseDouble(zhuyingyewushouru
+						.substring(0, changqifuzhaiheji.length() - 2));
 
-		double zhuyingyewushouru_current_d = 0, caiwufeiyong_current_d = 0, jinlirun_current_d = 0, zhuyingyewushouru_last_d = 0, caiwufeiyong_last_d = 0, jinlirun_last_d = 0;
+			if (caiwufeiyong != null && caiwufeiyong.length() > 0)
+				caiwufeiyong_d = Double.parseDouble(caiwufeiyong.substring(0,
+						caiwufeiyong.length() - 2));
 
-		if (zhuyingyewushouru_current != null
-				&& zhuyingyewushouru_current.length() > 0)
-			zhuyingyewushouru_current_d = Double
-					.parseDouble(zhuyingyewushouru_current.substring(0,
-							zhuyingyewushouru_current.length() - 2));
+			if (jinlirun != null && jinlirun.length() > 0)
+				jinlirun_d = Double.parseDouble(jinlirun.substring(0,
+						jinlirun.length() - 2));
 
-		if (caiwufeiyong_current != null && caiwufeiyong_current.length() > 0)
-			caiwufeiyong_current_d = Double.parseDouble(caiwufeiyong_current
-					.substring(0, caiwufeiyong_current.length() - 2));
+		} else {
+			String zhuyingyewushouru_current = t.getTableCell(
+					11 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String caiwufeiyong_current = t.getTableCell(
+					12 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String jinlirun_current = t.getTableCell(
+					13 + plusCount * BASE_INCREASEMENT, 1).getText();
 
-		if (jinlirun_current != null && jinlirun_current.length() > 0)
-			jinlirun_current_d = Double.parseDouble(jinlirun_current.substring(
-					0, jinlirun_current.length() - 2));
+			String zhuyingyewushouru_last = t.getTableCell(
+					25 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String caiwufeiyong_last = t.getTableCell(
+					26 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String jinlirun_last = t.getTableCell(
+					27 + plusCount * BASE_INCREASEMENT, 1).getText();
 
-		if (zhuyingyewushouru_last != null
-				&& zhuyingyewushouru_last.length() > 0)
-			zhuyingyewushouru_last_d = Double
-					.parseDouble(zhuyingyewushouru_last.substring(0,
-							zhuyingyewushouru_last.length() - 2));
+			double zhuyingyewushouru_current_d = 0, caiwufeiyong_current_d = 0, jinlirun_current_d = 0, zhuyingyewushouru_last_d = 0, caiwufeiyong_last_d = 0, jinlirun_last_d = 0;
 
-		if (caiwufeiyong_last != null && caiwufeiyong_last.length() > 0)
-			caiwufeiyong_last_d = Double.parseDouble(caiwufeiyong_last
-					.substring(0, caiwufeiyong_last.length() - 2));
+			if (zhuyingyewushouru_current != null
+					&& zhuyingyewushouru_current.length() > 0)
+				zhuyingyewushouru_current_d = Double
+						.parseDouble(zhuyingyewushouru_current.substring(0,
+								zhuyingyewushouru_current.length() - 2));
 
-		if (jinlirun_last != null && jinlirun_last.length() > 0)
-			jinlirun_last_d = Double.parseDouble(jinlirun_last.substring(0,
-					jinlirun_last.length() - 2));
+			if (caiwufeiyong_current != null
+					&& caiwufeiyong_current.length() > 0)
+				caiwufeiyong_current_d = Double
+						.parseDouble(caiwufeiyong_current.substring(0,
+								caiwufeiyong_current.length() - 2));
 
-		double zhuyingyewushouru_d = Double
-				.parseDouble(df.format(zhuyingyewushouru_current_d
-						- zhuyingyewushouru_last_d));
-		double caiwufeiyong_d = Double.parseDouble(df
-				.format(caiwufeiyong_current_d - caiwufeiyong_last_d));
-		double jinlirun_d = Double.parseDouble(df.format(jinlirun_current_d
-				- jinlirun_last_d));
+			if (jinlirun_current != null && jinlirun_current.length() > 0)
+				jinlirun_current_d = Double.parseDouble(jinlirun_current
+						.substring(0, jinlirun_current.length() - 2));
+
+			if (zhuyingyewushouru_last != null
+					&& zhuyingyewushouru_last.length() > 0)
+				zhuyingyewushouru_last_d = Double
+						.parseDouble(zhuyingyewushouru_last.substring(0,
+								zhuyingyewushouru_last.length() - 2));
+
+			if (caiwufeiyong_last != null && caiwufeiyong_last.length() > 0)
+				caiwufeiyong_last_d = Double.parseDouble(caiwufeiyong_last
+						.substring(0, caiwufeiyong_last.length() - 2));
+
+			if (jinlirun_last != null && jinlirun_last.length() > 0)
+				jinlirun_last_d = Double.parseDouble(jinlirun_last.substring(0,
+						jinlirun_last.length() - 2));
+
+			zhuyingyewushouru_d = Double.parseDouble(df
+					.format(zhuyingyewushouru_current_d
+							- zhuyingyewushouru_last_d));
+			caiwufeiyong_d = Double.parseDouble(df
+					.format(caiwufeiyong_current_d - caiwufeiyong_last_d));
+			jinlirun_d = Double.parseDouble(df.format(jinlirun_current_d
+					- jinlirun_last_d));
+		}
 
 		System.out.println(meigujingzichan_d);
 		System.out.println(meigushouyi_d);
@@ -188,7 +231,7 @@ public class HttpUnitUtil {
 	}
 
 	public static void main(String[] args) throws IOException, SAXException {
-		getCaiWuZhaiYao("002528");
+		getCaiWuZhaiYao("002528",Quarter._2013B, false);
 	}
 
 	private static String getRealMonth(String _month) {

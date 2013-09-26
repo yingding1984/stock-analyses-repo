@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.obv.core.mysql.entity.Quarter;
 import com.obv.core.util.FileUtil;
 
 /**
@@ -72,7 +73,7 @@ public class MultiRunner {
 //		}
 		
 		for (int i = 0; i < THREAD_COUNT; i++) {
-		Thread th = new CaiwuzhaiyaoThread(s[i]);
+		Thread th = new CaiwuzhaiyaoThread(s[i],Quarter._2013B);
 		th.start();
 	}
 	}

@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 
 import com.obv.core.http.util.HttpUnitUtil;
 import com.obv.core.mysql.entity.MySQLConnector;
+import com.obv.core.mysql.entity.Quarter;
 import com.obv.core.util.FileUtil;
 
 /**
@@ -24,7 +25,7 @@ import com.obv.core.util.FileUtil;
 public class MySQLUtil {
 
 	static ResultSet rs;
-	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/stock-list";
+	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/23-list";
 	private final static String CLEAN_DB = "truncate table records";
 	private final static String GET_ALL_RECORDS = "drop table records";
 	private final static String CREATE_TABLE = "create  table  records(id  varchar(20),Date  varchar(20),open float,close float,volumn int,primary  key(id,Date))";
@@ -117,18 +118,18 @@ public class MySQLUtil {
 		sqlconn.closeConn();
 	}
 
-	public static void storeCaiWuZhaiYao(String stockID, String quarter,
-			MySQLConnector sql_conn) throws IOException, SAXException,
+	public static void storeCaiWuZhaiYao(String stockID, Quarter q,
+			MySQLConnector sql_conn, boolean isFirstQ) throws IOException, SAXException,
 			SQLException {
 		String storeQuery;
 		ArrayList<Double> caiWuZhaiYao_Data = HttpUnitUtil
-				.getCaiWuZhaiYao(stockID);
+				.getCaiWuZhaiYao(stockID,q,isFirstQ);
 
 		System.out.println(stockID + "....stored");
 		storeQuery = "insert into caiwuzhaiyao(id,quarter,meigujingzichan,meigushouyi,meiguxianjinhanliang,meiguzibengongjijin,liudongzichanheji,zichanzongji,changqifuzhaiheji,zhuyingyewushouru,caiwufeiyong,jinglirun) values ('"
 				+ stockID
 				+ "','"
-				+ quarter
+				+ q.toString()
 				+ "','"
 				+ caiWuZhaiYao_Data.get(0)
 				+ "','"
@@ -151,7 +152,7 @@ public class MySQLUtil {
 		sql_conn.execute(storeQuery);
 	}
 
-	public static void storeAllCaiWuZhaiYao() throws Exception {
+	public static void storeAllCaiWuZhaiYao(Quarter Q,boolean isFirstQ) throws Exception {
 		String stockID;
 		String stockList = FileUtil.loadFile(STOCK_LIST_FILE_PATH);
 
@@ -162,12 +163,12 @@ public class MySQLUtil {
 		while (matcher.find()) {
 			stockID = matcher.group();
 			System.out.println("storing " + stockID);
-			storeCaiWuZhaiYao(stockID, "2013B", sqlconn);
+			storeCaiWuZhaiYao(stockID, Q, sqlconn,isFirstQ);
 		}
 		sqlconn.closeConn();
 	}
 	
-	public static void storeCaiWuZhaiYaoInParallel(String stockList) throws Exception {
+	public static void storeCaiWuZhaiYaoInParallel(String stockList, Quarter Q) throws Exception {
 		String stockID;
 
 		MySQLConnector sqlconn = new MySQLConnector("root");
@@ -177,15 +178,15 @@ public class MySQLUtil {
 		while (matcher.find()) {
 			stockID = matcher.group();
 			System.out.println("storing " + stockID);
-			storeCaiWuZhaiYao(stockID,"2013B", sqlconn);
+			storeCaiWuZhaiYao(stockID,Q, sqlconn,true);
 		}
 		sqlconn.closeConn();
 	}
 
 	public static void main(String[] args) throws Exception {
 		MySQLConnector sqlconn = new MySQLConnector("root");
-		storeCaiWuZhaiYao("002528", "2013B", sqlconn);
-		storeAllCaiWuZhaiYao();
+		storeCaiWuZhaiYao("002528", Quarter._2013B, sqlconn,false);
+		storeAllCaiWuZhaiYao( Quarter._2013B,false);
 	}
 
 }
