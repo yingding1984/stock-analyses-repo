@@ -119,17 +119,17 @@ public class MySQLUtil {
 	}
 
 	public static void storeCaiWuZhaiYao(String stockID, Quarter q,
-			MySQLConnector sql_conn, boolean isFirstQ) throws IOException, SAXException,
+			MySQLConnector sql_conn) throws IOException, SAXException,
 			SQLException {
 		String storeQuery;
 		ArrayList<Double> caiWuZhaiYao_Data = HttpUnitUtil
-				.getCaiWuZhaiYao(stockID,q,isFirstQ);
+				.getCaiWuZhaiYao(stockID,q);
 
 		System.out.println(stockID + "....stored");
 		storeQuery = "insert into caiwuzhaiyao(id,quarter,meigujingzichan,meigushouyi,meiguxianjinhanliang,meiguzibengongjijin,liudongzichanheji,zichanzongji,changqifuzhaiheji,zhuyingyewushouru,caiwufeiyong,jinglirun) values ('"
 				+ stockID
 				+ "','"
-				+ q.toString()
+				+ q.toString().substring(1,q.toString().length())
 				+ "','"
 				+ caiWuZhaiYao_Data.get(0)
 				+ "','"
@@ -152,7 +152,7 @@ public class MySQLUtil {
 		sql_conn.execute(storeQuery);
 	}
 
-	public static void storeAllCaiWuZhaiYao(Quarter Q,boolean isFirstQ) throws Exception {
+	public static void storeAllCaiWuZhaiYao(Quarter Q) throws Exception {
 		String stockID;
 		String stockList = FileUtil.loadFile(STOCK_LIST_FILE_PATH);
 
@@ -163,7 +163,7 @@ public class MySQLUtil {
 		while (matcher.find()) {
 			stockID = matcher.group();
 			System.out.println("storing " + stockID);
-			storeCaiWuZhaiYao(stockID, Q, sqlconn,isFirstQ);
+			storeCaiWuZhaiYao(stockID, Q, sqlconn);
 		}
 		sqlconn.closeConn();
 	}
@@ -178,15 +178,15 @@ public class MySQLUtil {
 		while (matcher.find()) {
 			stockID = matcher.group();
 			System.out.println("storing " + stockID);
-			storeCaiWuZhaiYao(stockID,Q, sqlconn,true);
+			storeCaiWuZhaiYao(stockID,Q, sqlconn);
 		}
 		sqlconn.closeConn();
 	}
 
 	public static void main(String[] args) throws Exception {
 		MySQLConnector sqlconn = new MySQLConnector("root");
-		storeCaiWuZhaiYao("002528", Quarter._2013B, sqlconn,false);
-		storeAllCaiWuZhaiYao( Quarter._2013B,false);
+		storeCaiWuZhaiYao("600025", Quarter._2013A, sqlconn);
+//		storeAllCaiWuZhaiYao( Quarter._2013B);
 	}
 
 }

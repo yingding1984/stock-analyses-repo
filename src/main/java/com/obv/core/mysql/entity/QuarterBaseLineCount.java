@@ -11,13 +11,14 @@ import java.util.Hashtable;
  */
 public class QuarterBaseLineCount {
 
-	public static Hashtable<Quarter, Integer> qHash = new Hashtable<Quarter, Integer>();
+	public static Hashtable<Quarter, Integer> qHash = QuarterBaseLineCount.getQuarterHash();
 
 	/**
 	 * 
 	 */
-	public QuarterBaseLineCount() {
+	private static Hashtable<Quarter, Integer> getQuarterHash() {
 		// TODO Auto-generated constructor stub
+		Hashtable<Quarter, Integer> qHash = new Hashtable<Quarter, Integer>();
 		qHash.put(Quarter._2013B, 0);
 		qHash.put(Quarter._2013A, 1);
 		qHash.put(Quarter._2012D, 2);
@@ -28,6 +29,10 @@ public class QuarterBaseLineCount {
 		qHash.put(Quarter._2011C, 7);
 		qHash.put(Quarter._2011B, 8);
 		qHash.put(Quarter._2011A, 9);
+		
+		return qHash;
 
 	}
+	
+
 }

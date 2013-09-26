@@ -15,7 +15,7 @@ import com.obv.core.util.FileUtil;
  * 
  */
 public class MultiRunner {
-	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/stock-list";
+	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/list";
 	private final static int THREAD_COUNT = 20;
 	private final static String FROM_YEAR = "2013";
 	private final static String FROM_MONTH = "08";

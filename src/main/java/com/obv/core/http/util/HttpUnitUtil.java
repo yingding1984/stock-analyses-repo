@@ -65,8 +65,14 @@ public class HttpUnitUtil {
 		return priceVolumeResults;
 	}
 
-	public static ArrayList<Double> getCaiWuZhaiYao(String _stockID,
-			Quarter q, boolean isFirstQ) throws IOException, SAXException {
+	public static ArrayList<Double> getCaiWuZhaiYao(String _stockID, Quarter q)
+			throws IOException, SAXException {
+		System.out.println("stock id is :" + _stockID);
+		boolean isFirstQ = false;
+
+		if (q.toString().contains("A"))
+			isFirstQ = true;
+
 		int plusCount = QuarterBaseLineCount.qHash.get(q);
 		ArrayList<Double> caiWuZhaiYao_Data = new ArrayList<Double>();
 		HttpUnitOptions.setScriptingEnabled(false);
@@ -139,7 +145,7 @@ public class HttpUnitUtil {
 
 			if (zhuyingyewushouru != null && zhuyingyewushouru.length() > 0)
 				zhuyingyewushouru_d = Double.parseDouble(zhuyingyewushouru
-						.substring(0, changqifuzhaiheji.length() - 2));
+						.substring(0, zhuyingyewushouru.length() - 2));
 
 			if (caiwufeiyong != null && caiwufeiyong.length() > 0)
 				caiwufeiyong_d = Double.parseDouble(caiwufeiyong.substring(0,
@@ -231,7 +237,7 @@ public class HttpUnitUtil {
 	}
 
 	public static void main(String[] args) throws IOException, SAXException {
-		getCaiWuZhaiYao("002528",Quarter._2013B, false);
+		getCaiWuZhaiYao("002528", Quarter._2013B);
 	}
 
 	private static String getRealMonth(String _month) {
