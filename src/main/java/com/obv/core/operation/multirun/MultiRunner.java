@@ -15,7 +15,7 @@ import com.obv.core.util.FileUtil;
  */
 public class MultiRunner {
 	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/stock-list";
-	private final static int THREAD_COUNT = 5;
+	private final static int THREAD_COUNT = 20;
 	private final static String FROM_YEAR = "2013";
 	private final static String FROM_MONTH = "08";
 	private final static String FROM_DATE = "01";
@@ -64,11 +64,16 @@ public class MultiRunner {
 
 	public static void main(String[] args) throws Exception {
 		String[] s = getStockList();
-
+//
+//		for (int i = 0; i < THREAD_COUNT; i++) {
+//			Thread thread = new DataCollectorThread(FROM_YEAR, FROM_MONTH,
+//					FROM_DATE, TO_YEAR, TO_MONTH, TO_DATE, s[i]);
+//			thread.start();
+//		}
+		
 		for (int i = 0; i < THREAD_COUNT; i++) {
-			Thread thread = new DataCollectorThread(FROM_YEAR, FROM_MONTH,
-					FROM_DATE, TO_YEAR, TO_MONTH, TO_DATE, s[i]);
-			thread.start();
-		}
+		Thread th = new CaiwuzhaiyaoThread(s[i]);
+		th.start();
+	}
 	}
 }

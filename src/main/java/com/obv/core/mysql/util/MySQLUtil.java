@@ -51,7 +51,7 @@ public class MySQLUtil {
 			String to_month, String to_date, MySQLConnector sql_conn)
 			throws IOException, SAXException, SQLException {
 		String tradeDate, openPrice, closePrice, volumn;
-		String restoreQuery;
+		String storeQuery;
 		ArrayList<String> priceVolumeResults = HttpUnitUtil
 				.getStockTradeDetailFromDate(stockID, from_year, from_month,
 						from_date, to_year, to_month, to_date);
@@ -66,7 +66,7 @@ public class MySQLUtil {
 				System.out.println("Storing trade record :" + stockID + ":"
 						+ tradeDate + " " + openPrice + " " + closePrice + " "
 						+ volumn);
-				restoreQuery = "insert into records(id,Date,open,close,volumn) values ('"
+				storeQuery = "insert into records(id,Date,open,close,volumn) values ('"
 						+ stockID
 						+ "','"
 						+ tradeDate
@@ -74,7 +74,7 @@ public class MySQLUtil {
 						+ openPrice
 						+ ","
 						+ closePrice + "," + volumn + ")";
-				sql_conn.execute(restoreQuery);
+				sql_conn.execute(storeQuery);
 			}
 		}
 
@@ -115,6 +115,77 @@ public class MySQLUtil {
 					to_year, to_month, to_date, sqlconn);
 		}
 		sqlconn.closeConn();
+	}
+
+	public static void storeCaiWuZhaiYao(String stockID, String quarter,
+			MySQLConnector sql_conn) throws IOException, SAXException,
+			SQLException {
+		String storeQuery;
+		ArrayList<Double> caiWuZhaiYao_Data = HttpUnitUtil
+				.getCaiWuZhaiYao(stockID);
+
+		System.out.println(stockID + "....stored");
+		storeQuery = "insert into caiwuzhaiyao(id,quarter,meigujingzichan,meigushouyi,meiguxianjinhanliang,meiguzibengongjijin,liudongzichanheji,zichanzongji,changqifuzhaiheji,zhuyingyewushouru,caiwufeiyong,jinglirun) values ('"
+				+ stockID
+				+ "','"
+				+ quarter
+				+ "','"
+				+ caiWuZhaiYao_Data.get(0)
+				+ "','"
+				+ caiWuZhaiYao_Data.get(1)
+				+ "','"
+				+ caiWuZhaiYao_Data.get(2)
+				+ "',"
+				+ caiWuZhaiYao_Data.get(3)
+				+ ","
+				+ caiWuZhaiYao_Data.get(4)
+				+ ","
+				+ caiWuZhaiYao_Data.get(5)
+				+ ","
+				+ caiWuZhaiYao_Data.get(6)
+				+ ","
+				+ caiWuZhaiYao_Data.get(7)
+				+ ","
+				+ caiWuZhaiYao_Data.get(8)
+				+ "," + caiWuZhaiYao_Data.get(9) + ")";
+		sql_conn.execute(storeQuery);
+	}
+
+	public static void storeAllCaiWuZhaiYao() throws Exception {
+		String stockID;
+		String stockList = FileUtil.loadFile(STOCK_LIST_FILE_PATH);
+
+		MySQLConnector sqlconn = new MySQLConnector("root");
+
+		Pattern pattern = Pattern.compile("\\d{6}");
+		Matcher matcher = pattern.matcher(stockList);
+		while (matcher.find()) {
+			stockID = matcher.group();
+			System.out.println("storing " + stockID);
+			storeCaiWuZhaiYao(stockID, "2013B", sqlconn);
+		}
+		sqlconn.closeConn();
+	}
+	
+	public static void storeCaiWuZhaiYaoInParallel(String stockList) throws Exception {
+		String stockID;
+
+		MySQLConnector sqlconn = new MySQLConnector("root");
+
+		Pattern pattern = Pattern.compile("\\d{6}");
+		Matcher matcher = pattern.matcher(stockList);
+		while (matcher.find()) {
+			stockID = matcher.group();
+			System.out.println("storing " + stockID);
+			storeCaiWuZhaiYao(stockID,"2013B", sqlconn);
+		}
+		sqlconn.closeConn();
+	}
+
+	public static void main(String[] args) throws Exception {
+		MySQLConnector sqlconn = new MySQLConnector("root");
+		storeCaiWuZhaiYao("002528", "2013B", sqlconn);
+		storeAllCaiWuZhaiYao();
 	}
 
 }
