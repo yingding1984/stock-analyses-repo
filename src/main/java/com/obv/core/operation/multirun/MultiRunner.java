@@ -16,6 +16,7 @@ import com.obv.core.util.FileUtil;
  */
 public class MultiRunner {
 	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/list";
+//	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/failedlist";
 	private final static int THREAD_COUNT = 20;
 	private final static String FROM_YEAR = "2013";
 	private final static String FROM_MONTH = "08";
@@ -41,6 +42,7 @@ public class MultiRunner {
 		}
 
 		stockNum = StockListArray.size();
+		System.out.println(stockNum+" stocks in all!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		int groupSize = stockNum / THREAD_COUNT;
 
 		for (int i = 0; i < THREAD_COUNT - 1; i++) {
@@ -71,9 +73,9 @@ public class MultiRunner {
 //					FROM_DATE, TO_YEAR, TO_MONTH, TO_DATE, s[i]);
 //			thread.start();
 //		}
-		
+		FileUtil.cleanLogFile();
 		for (int i = 0; i < THREAD_COUNT; i++) {
-		Thread th = new CaiwuzhaiyaoThread(s[i],Quarter._2013B);
+		Thread th = new CaiwuzhaiyaoThread(s[i],Quarter._2012B);
 		th.start();
 	}
 	}

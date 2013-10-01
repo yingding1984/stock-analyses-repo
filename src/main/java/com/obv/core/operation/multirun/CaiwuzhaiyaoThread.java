@@ -21,6 +21,8 @@ public class CaiwuzhaiyaoThread extends Thread {
 		this.Q=_Q;
 	}
 
+	
+	
 	public void run() {
 		try {
 			MySQLUtil.storeCaiWuZhaiYaoInParallel(stockList,Q);

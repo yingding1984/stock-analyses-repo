@@ -25,7 +25,7 @@ import com.obv.core.util.FileUtil;
 public class MySQLUtil {
 
 	static ResultSet rs;
-	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/23-list";
+	private final static String STOCK_LIST_FILE_PATH = "src/main/resources/list";
 	private final static String CLEAN_DB = "truncate table records";
 	private final static String GET_ALL_RECORDS = "drop table records";
 	private final static String CREATE_TABLE = "create  table  records(id  varchar(20),Date  varchar(20),open float,close float,volumn int,primary  key(id,Date))";
@@ -119,37 +119,41 @@ public class MySQLUtil {
 	}
 
 	public static void storeCaiWuZhaiYao(String stockID, Quarter q,
-			MySQLConnector sql_conn) throws IOException, SAXException,
-			SQLException {
+			MySQLConnector sql_conn) throws Exception {
 		String storeQuery;
-		ArrayList<Double> caiWuZhaiYao_Data = HttpUnitUtil
-				.getCaiWuZhaiYao(stockID,q);
+		ArrayList<Double> caiWuZhaiYao_Data = HttpUnitUtil.getCaiWuZhaiYao(
+				stockID, q);
 
-		System.out.println(stockID + "....stored");
-		storeQuery = "insert into caiwuzhaiyao(id,quarter,meigujingzichan,meigushouyi,meiguxianjinhanliang,meiguzibengongjijin,liudongzichanheji,zichanzongji,changqifuzhaiheji,zhuyingyewushouru,caiwufeiyong,jinglirun) values ('"
-				+ stockID
-				+ "','"
-				+ q.toString().substring(1,q.toString().length())
-				+ "','"
-				+ caiWuZhaiYao_Data.get(0)
-				+ "','"
-				+ caiWuZhaiYao_Data.get(1)
-				+ "','"
-				+ caiWuZhaiYao_Data.get(2)
-				+ "',"
-				+ caiWuZhaiYao_Data.get(3)
-				+ ","
-				+ caiWuZhaiYao_Data.get(4)
-				+ ","
-				+ caiWuZhaiYao_Data.get(5)
-				+ ","
-				+ caiWuZhaiYao_Data.get(6)
-				+ ","
-				+ caiWuZhaiYao_Data.get(7)
-				+ ","
-				+ caiWuZhaiYao_Data.get(8)
-				+ "," + caiWuZhaiYao_Data.get(9) + ")";
-		sql_conn.execute(storeQuery);
+		if (caiWuZhaiYao_Data.size() >= 5) {
+			System.out.println(stockID + "....stored");
+			storeQuery = "insert into caiwuzhaiyao(id,quarter,meigujingzichan,meigushouyi,meiguxianjinhanliang,meiguzibengongjijin,liudongzichanheji,zichanzongji,changqifuzhaiheji,zhuyingyewushouru,caiwufeiyong,jinglirun) values ('"
+					+ stockID
+					+ "','"
+					+ q.toString().substring(1, q.toString().length())
+					+ "','"
+					+ caiWuZhaiYao_Data.get(0)
+					+ "','"
+					+ caiWuZhaiYao_Data.get(1)
+					+ "','"
+					+ caiWuZhaiYao_Data.get(2)
+					+ "',"
+					+ caiWuZhaiYao_Data.get(3)
+					+ ","
+					+ caiWuZhaiYao_Data.get(4)
+					+ ","
+					+ caiWuZhaiYao_Data.get(5)
+					+ ","
+					+ caiWuZhaiYao_Data.get(6)
+					+ ","
+					+ caiWuZhaiYao_Data.get(7)
+					+ ","
+					+ caiWuZhaiYao_Data.get(8)
+					+ ","
+					+ caiWuZhaiYao_Data.get(9) + ")";
+			sql_conn.execute(storeQuery);
+		}else{
+			FileUtil.logFailStock(stockID);
+		}
 	}
 
 	public static void storeAllCaiWuZhaiYao(Quarter Q) throws Exception {
@@ -167,8 +171,9 @@ public class MySQLUtil {
 		}
 		sqlconn.closeConn();
 	}
-	
-	public static void storeCaiWuZhaiYaoInParallel(String stockList, Quarter Q) throws Exception {
+
+	public static void storeCaiWuZhaiYaoInParallel(String stockList, Quarter Q)
+			throws Exception {
 		String stockID;
 
 		MySQLConnector sqlconn = new MySQLConnector("root");
@@ -178,7 +183,7 @@ public class MySQLUtil {
 		while (matcher.find()) {
 			stockID = matcher.group();
 			System.out.println("storing " + stockID);
-			storeCaiWuZhaiYao(stockID,Q, sqlconn);
+			storeCaiWuZhaiYao(stockID, Q, sqlconn);
 		}
 		sqlconn.closeConn();
 	}
@@ -186,7 +191,7 @@ public class MySQLUtil {
 	public static void main(String[] args) throws Exception {
 		MySQLConnector sqlconn = new MySQLConnector("root");
 		storeCaiWuZhaiYao("600025", Quarter._2013A, sqlconn);
-//		storeAllCaiWuZhaiYao( Quarter._2013B);
+		// storeAllCaiWuZhaiYao( Quarter._2013B);
 	}
 
 }

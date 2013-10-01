@@ -15,6 +15,7 @@ import com.meterware.httpunit.WebResponse;
 import com.meterware.httpunit.WebTable;
 import com.obv.core.mysql.entity.Quarter;
 import com.obv.core.mysql.entity.QuarterBaseLineCount;
+import com.obv.core.util.FileUtil;
 
 /**
  * @author yingdin
@@ -66,7 +67,7 @@ public class HttpUnitUtil {
 	}
 
 	public static ArrayList<Double> getCaiWuZhaiYao(String _stockID, Quarter q)
-			throws IOException, SAXException {
+			throws Exception {
 		System.out.println("stock id is :" + _stockID);
 		boolean isFirstQ = false;
 
@@ -81,162 +82,170 @@ public class HttpUnitUtil {
 
 		DecimalFormat df = new DecimalFormat(".##");
 
-		response = wc
-				.getResponse("http://vip.stock.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/"
-						+ _stockID + ".phtml");
 
-		WebTable[] table = response.getTables();
-		WebTable t = table[19];
-		// System.out.println(t.getText());
-		String meigujingzichan = t.getTableCell(
-				3 + plusCount * BASE_INCREASEMENT, 1).getText();
-		String meigushouyi = t.getTableCell(4 + plusCount * BASE_INCREASEMENT,
-				1).getText();
-		String meiguxianjinhanliang = t.getTableCell(
-				5 + plusCount * BASE_INCREASEMENT, 1).getText();
-		String meiguzibengongjijin = t.getTableCell(
-				6 + plusCount * BASE_INCREASEMENT, 1).getText();
-		String liudongzichanheji = t.getTableCell(
-				8 + plusCount * BASE_INCREASEMENT, 1).getText();
-		String zichanzongji = t.getTableCell(9 + plusCount * BASE_INCREASEMENT,
-				1).getText();
-		String changqifuzhaiheji = t.getTableCell(
-				10 + plusCount * BASE_INCREASEMENT, 1).getText();
+		WebTable[] table = new WebTable[1];
 
-		double meigujingzichan_d = 0, meigushouyi_d = 0, meiguxianjinhanliang_d = 0, meiguzibengongjijin_d = 0, liudongzichanheji_d = 0, zichanzongji_d = 0, changqifuzhaiheji_d = 0;
-
-		double zhuyingyewushouru_d = 0, caiwufeiyong_d = 0, jinlirun_d = 0;
-
-		if (meigujingzichan != null && meigujingzichan.length() > 0)
-			meigujingzichan_d = Double.parseDouble(meigujingzichan.substring(0,
-					meigujingzichan.length() - 1));
-
-		if (meigushouyi != null && meigushouyi.length() > 0)
-			meigushouyi_d = Double.parseDouble(meigushouyi.substring(0,
-					meigushouyi.length() - 1));
-
-		if (meiguxianjinhanliang != null && meiguxianjinhanliang.length() > 0)
-			meiguxianjinhanliang_d = Double.parseDouble(meiguxianjinhanliang
-					.substring(0, meiguxianjinhanliang.length() - 1));
-
-		if (meiguzibengongjijin != null && meiguzibengongjijin.length() > 0)
-			meiguzibengongjijin_d = Double.parseDouble(meiguzibengongjijin
-					.substring(0, meiguzibengongjijin.length() - 1));
-
-		if (liudongzichanheji != null && liudongzichanheji.length() > 0)
-			liudongzichanheji_d = Double.parseDouble(liudongzichanheji
-					.substring(0, liudongzichanheji.length() - 2));
-
-		if (zichanzongji != null && zichanzongji.length() > 0)
-			zichanzongji_d = Double.parseDouble(zichanzongji.substring(0,
-					zichanzongji.length() - 2));
-
-		if (changqifuzhaiheji != null && changqifuzhaiheji.length() > 0)
-			changqifuzhaiheji_d = Double.parseDouble(changqifuzhaiheji
-					.substring(0, changqifuzhaiheji.length() - 2));
-
-		if (isFirstQ) {
-			String zhuyingyewushouru = t.getTableCell(
-					11 + plusCount * BASE_INCREASEMENT, 1).getText();
-			String caiwufeiyong = t.getTableCell(
-					12 + plusCount * BASE_INCREASEMENT, 1).getText();
-			String jinlirun = t.getTableCell(
-					13 + plusCount * BASE_INCREASEMENT, 1).getText();
-
-			if (zhuyingyewushouru != null && zhuyingyewushouru.length() > 0)
-				zhuyingyewushouru_d = Double.parseDouble(zhuyingyewushouru
-						.substring(0, zhuyingyewushouru.length() - 2));
-
-			if (caiwufeiyong != null && caiwufeiyong.length() > 0)
-				caiwufeiyong_d = Double.parseDouble(caiwufeiyong.substring(0,
-						caiwufeiyong.length() - 2));
-
-			if (jinlirun != null && jinlirun.length() > 0)
-				jinlirun_d = Double.parseDouble(jinlirun.substring(0,
-						jinlirun.length() - 2));
-
-		} else {
-			String zhuyingyewushouru_current = t.getTableCell(
-					11 + plusCount * BASE_INCREASEMENT, 1).getText();
-			String caiwufeiyong_current = t.getTableCell(
-					12 + plusCount * BASE_INCREASEMENT, 1).getText();
-			String jinlirun_current = t.getTableCell(
-					13 + plusCount * BASE_INCREASEMENT, 1).getText();
-
-			String zhuyingyewushouru_last = t.getTableCell(
-					25 + plusCount * BASE_INCREASEMENT, 1).getText();
-			String caiwufeiyong_last = t.getTableCell(
-					26 + plusCount * BASE_INCREASEMENT, 1).getText();
-			String jinlirun_last = t.getTableCell(
-					27 + plusCount * BASE_INCREASEMENT, 1).getText();
-
-			double zhuyingyewushouru_current_d = 0, caiwufeiyong_current_d = 0, jinlirun_current_d = 0, zhuyingyewushouru_last_d = 0, caiwufeiyong_last_d = 0, jinlirun_last_d = 0;
-
-			if (zhuyingyewushouru_current != null
-					&& zhuyingyewushouru_current.length() > 0)
-				zhuyingyewushouru_current_d = Double
-						.parseDouble(zhuyingyewushouru_current.substring(0,
-								zhuyingyewushouru_current.length() - 2));
-
-			if (caiwufeiyong_current != null
-					&& caiwufeiyong_current.length() > 0)
-				caiwufeiyong_current_d = Double
-						.parseDouble(caiwufeiyong_current.substring(0,
-								caiwufeiyong_current.length() - 2));
-
-			if (jinlirun_current != null && jinlirun_current.length() > 0)
-				jinlirun_current_d = Double.parseDouble(jinlirun_current
-						.substring(0, jinlirun_current.length() - 2));
-
-			if (zhuyingyewushouru_last != null
-					&& zhuyingyewushouru_last.length() > 0)
-				zhuyingyewushouru_last_d = Double
-						.parseDouble(zhuyingyewushouru_last.substring(0,
-								zhuyingyewushouru_last.length() - 2));
-
-			if (caiwufeiyong_last != null && caiwufeiyong_last.length() > 0)
-				caiwufeiyong_last_d = Double.parseDouble(caiwufeiyong_last
-						.substring(0, caiwufeiyong_last.length() - 2));
-
-			if (jinlirun_last != null && jinlirun_last.length() > 0)
-				jinlirun_last_d = Double.parseDouble(jinlirun_last.substring(0,
-						jinlirun_last.length() - 2));
-
-			zhuyingyewushouru_d = Double.parseDouble(df
-					.format(zhuyingyewushouru_current_d
-							- zhuyingyewushouru_last_d));
-			caiwufeiyong_d = Double.parseDouble(df
-					.format(caiwufeiyong_current_d - caiwufeiyong_last_d));
-			jinlirun_d = Double.parseDouble(df.format(jinlirun_current_d
-					- jinlirun_last_d));
+		while (table.length < 19) {
+			response = wc
+					.getResponse("http://vip.stock.finance.sina.com.cn/corp/go.php/vFD_FinanceSummary/stockid/"
+							+ _stockID + ".phtml");
+			table = response.getTables();
 		}
 
-		System.out.println(meigujingzichan_d);
-		System.out.println(meigushouyi_d);
-		System.out.println(meiguxianjinhanliang_d);
-		System.out.println(meiguzibengongjijin_d);
-		System.out.println(liudongzichanheji_d);
-		System.out.println(zichanzongji_d);
-		System.out.println(changqifuzhaiheji_d);
-		System.out.println(zhuyingyewushouru_d);
-		System.out.println(caiwufeiyong_d);
-		System.out.println(jinlirun_d);
+		
+			WebTable t = table[19];
+			// System.out.println(t.getText());
+			String meigujingzichan = t.getTableCell(
+					3 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String meigushouyi = t.getTableCell(
+					4 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String meiguxianjinhanliang = t.getTableCell(
+					5 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String meiguzibengongjijin = t.getTableCell(
+					6 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String liudongzichanheji = t.getTableCell(
+					8 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String zichanzongji = t.getTableCell(
+					9 + plusCount * BASE_INCREASEMENT, 1).getText();
+			String changqifuzhaiheji = t.getTableCell(
+					10 + plusCount * BASE_INCREASEMENT, 1).getText();
 
-		caiWuZhaiYao_Data.add(meigujingzichan_d);
-		caiWuZhaiYao_Data.add(meigushouyi_d);
-		caiWuZhaiYao_Data.add(meiguxianjinhanliang_d);
-		caiWuZhaiYao_Data.add(meiguzibengongjijin_d);
-		caiWuZhaiYao_Data.add(liudongzichanheji_d);
-		caiWuZhaiYao_Data.add(zichanzongji_d);
-		caiWuZhaiYao_Data.add(changqifuzhaiheji_d);
-		caiWuZhaiYao_Data.add(zhuyingyewushouru_d);
-		caiWuZhaiYao_Data.add(caiwufeiyong_d);
-		caiWuZhaiYao_Data.add(jinlirun_d);
+			double meigujingzichan_d = 0, meigushouyi_d = 0, meiguxianjinhanliang_d = 0, meiguzibengongjijin_d = 0, liudongzichanheji_d = 0, zichanzongji_d = 0, changqifuzhaiheji_d = 0;
 
+			double zhuyingyewushouru_d = 0, caiwufeiyong_d = 0, jinlirun_d = 0;
+
+			if (meigujingzichan != null && meigujingzichan.length() > 0)
+				meigujingzichan_d = Double.parseDouble(meigujingzichan
+						.substring(0, meigujingzichan.length() - 1));
+
+			if (meigushouyi != null && meigushouyi.length() > 0)
+				meigushouyi_d = Double.parseDouble(meigushouyi.substring(0,
+						meigushouyi.length() - 1));
+
+			if (meiguxianjinhanliang != null
+					&& meiguxianjinhanliang.length() > 0)
+				meiguxianjinhanliang_d = Double
+						.parseDouble(meiguxianjinhanliang.substring(0,
+								meiguxianjinhanliang.length() - 1));
+
+			if (meiguzibengongjijin != null && meiguzibengongjijin.length() > 0)
+				meiguzibengongjijin_d = Double.parseDouble(meiguzibengongjijin
+						.substring(0, meiguzibengongjijin.length() - 1));
+
+			if (liudongzichanheji != null && liudongzichanheji.length() > 0)
+				liudongzichanheji_d = Double.parseDouble(liudongzichanheji
+						.substring(0, liudongzichanheji.length() - 2));
+
+			if (zichanzongji != null && zichanzongji.length() > 0)
+				zichanzongji_d = Double.parseDouble(zichanzongji.substring(0,
+						zichanzongji.length() - 2));
+
+			if (changqifuzhaiheji != null && changqifuzhaiheji.length() > 0)
+				changqifuzhaiheji_d = Double.parseDouble(changqifuzhaiheji
+						.substring(0, changqifuzhaiheji.length() - 2));
+
+			if (isFirstQ) {
+				String zhuyingyewushouru = t.getTableCell(
+						11 + plusCount * BASE_INCREASEMENT, 1).getText();
+				String caiwufeiyong = t.getTableCell(
+						12 + plusCount * BASE_INCREASEMENT, 1).getText();
+				String jinlirun = t.getTableCell(
+						13 + plusCount * BASE_INCREASEMENT, 1).getText();
+
+				if (zhuyingyewushouru != null && zhuyingyewushouru.length() > 0)
+					zhuyingyewushouru_d = Double.parseDouble(zhuyingyewushouru
+							.substring(0, zhuyingyewushouru.length() - 2));
+
+				if (caiwufeiyong != null && caiwufeiyong.length() > 0)
+					caiwufeiyong_d = Double.parseDouble(caiwufeiyong.substring(
+							0, caiwufeiyong.length() - 2));
+
+				if (jinlirun != null && jinlirun.length() > 0)
+					jinlirun_d = Double.parseDouble(jinlirun.substring(0,
+							jinlirun.length() - 2));
+
+			} else {
+				String zhuyingyewushouru_current = t.getTableCell(
+						11 + plusCount * BASE_INCREASEMENT, 1).getText();
+				String caiwufeiyong_current = t.getTableCell(
+						12 + plusCount * BASE_INCREASEMENT, 1).getText();
+				String jinlirun_current = t.getTableCell(
+						13 + plusCount * BASE_INCREASEMENT, 1).getText();
+
+				String zhuyingyewushouru_last = t.getTableCell(
+						25 + plusCount * BASE_INCREASEMENT, 1).getText();
+				String caiwufeiyong_last = t.getTableCell(
+						26 + plusCount * BASE_INCREASEMENT, 1).getText();
+				String jinlirun_last = t.getTableCell(
+						27 + plusCount * BASE_INCREASEMENT, 1).getText();
+
+				double zhuyingyewushouru_current_d = 0, caiwufeiyong_current_d = 0, jinlirun_current_d = 0, zhuyingyewushouru_last_d = 0, caiwufeiyong_last_d = 0, jinlirun_last_d = 0;
+
+				if (zhuyingyewushouru_current != null
+						&& zhuyingyewushouru_current.length() > 0)
+					zhuyingyewushouru_current_d = Double
+							.parseDouble(zhuyingyewushouru_current.substring(0,
+									zhuyingyewushouru_current.length() - 2));
+
+				if (caiwufeiyong_current != null
+						&& caiwufeiyong_current.length() > 0)
+					caiwufeiyong_current_d = Double
+							.parseDouble(caiwufeiyong_current.substring(0,
+									caiwufeiyong_current.length() - 2));
+
+				if (jinlirun_current != null && jinlirun_current.length() > 0)
+					jinlirun_current_d = Double.parseDouble(jinlirun_current
+							.substring(0, jinlirun_current.length() - 2));
+
+				if (zhuyingyewushouru_last != null
+						&& zhuyingyewushouru_last.length() > 0)
+					zhuyingyewushouru_last_d = Double
+							.parseDouble(zhuyingyewushouru_last.substring(0,
+									zhuyingyewushouru_last.length() - 2));
+
+				if (caiwufeiyong_last != null && caiwufeiyong_last.length() > 0)
+					caiwufeiyong_last_d = Double.parseDouble(caiwufeiyong_last
+							.substring(0, caiwufeiyong_last.length() - 2));
+
+				if (jinlirun_last != null && jinlirun_last.length() > 0)
+					jinlirun_last_d = Double.parseDouble(jinlirun_last
+							.substring(0, jinlirun_last.length() - 2));
+
+				zhuyingyewushouru_d = Double.parseDouble(df
+						.format(zhuyingyewushouru_current_d
+								- zhuyingyewushouru_last_d));
+				caiwufeiyong_d = Double.parseDouble(df
+						.format(caiwufeiyong_current_d - caiwufeiyong_last_d));
+				jinlirun_d = Double.parseDouble(df.format(jinlirun_current_d
+						- jinlirun_last_d));
+			}
+
+			System.out.println(meigujingzichan_d);
+			System.out.println(meigushouyi_d);
+			System.out.println(meiguxianjinhanliang_d);
+			System.out.println(meiguzibengongjijin_d);
+			System.out.println(liudongzichanheji_d);
+			System.out.println(zichanzongji_d);
+			System.out.println(changqifuzhaiheji_d);
+			System.out.println(zhuyingyewushouru_d);
+			System.out.println(caiwufeiyong_d);
+			System.out.println(jinlirun_d);
+
+			caiWuZhaiYao_Data.add(meigujingzichan_d);
+			caiWuZhaiYao_Data.add(meigushouyi_d);
+			caiWuZhaiYao_Data.add(meiguxianjinhanliang_d);
+			caiWuZhaiYao_Data.add(meiguzibengongjijin_d);
+			caiWuZhaiYao_Data.add(liudongzichanheji_d);
+			caiWuZhaiYao_Data.add(zichanzongji_d);
+			caiWuZhaiYao_Data.add(changqifuzhaiheji_d);
+			caiWuZhaiYao_Data.add(zhuyingyewushouru_d);
+			caiWuZhaiYao_Data.add(caiwufeiyong_d);
+			caiWuZhaiYao_Data.add(jinlirun_d);
+		
 		return caiWuZhaiYao_Data;
 	}
 
-	public static void main(String[] args) throws IOException, SAXException {
+	public static void main(String[] args) throws Exception {
 		getCaiWuZhaiYao("002528", Quarter._2013B);
 	}
 
