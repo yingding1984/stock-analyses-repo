@@ -75,7 +75,7 @@ public class MultiRunner {
 //		}
 		FileUtil.cleanLogFile();
 		for (int i = 0; i < THREAD_COUNT; i++) {
-		Thread th = new CaiwuzhaiyaoThread(s[i],Quarter._2012B);
+		Thread th = new CaiwuzhaiyaoThread(s[i],Quarter._2013C);
 		th.start();
 	}
 	}
