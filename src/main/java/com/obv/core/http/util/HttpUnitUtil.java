@@ -25,7 +25,7 @@ public class HttpUnitUtil {
 	// structure of priceVolumeResults-- 1 Date 2 Open Price 5 Close Price 6
 	// Volumn of day
 
-	private final static int BASE_INCREASEMENT = 14;
+	private final static int BASE_INCREASEMENT = 114;
 
 	public static ArrayList<String> getStockTradeDetailFromDate(
 			String _stockID, String _from_year, String _from_month,
